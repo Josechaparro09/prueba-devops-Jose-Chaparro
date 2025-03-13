@@ -1,22 +1,23 @@
 #!/bin/bash
+ 
+# Detener y eliminar el contenedor si ya está en ejecución
 
-# Construir la imagen Docker
+docker stop prueba-devops-app 2>/dev/null
+
+docker rm prueba-devops-app 2>/dev/null
+ 
+# Construir la imagen
+
+echo "🚀 Construyendo la imagen de Docker..."
+
 docker build -t prueba-devops-app .
+ 
+# Ejecutar el contenedor con mapeo de puertos y volumen para logs
 
-# Crear directorio de logs si no existe
-mkdir -p logs
+echo "📦 Ejecutando el contenedor..."
 
-# Detener y eliminar el contenedor si ya existe
-docker stop prueba-devops-container 2>/dev/null
-docker rm prueba-devops-container 2>/dev/null
+docker run -d -p 5000:5000 -v $(pwd)/logs:/logs --name prueba-devops-app prueba-devops-app
+ 
+echo "✅ La aplicación está corriendo en http://localhost:5000/"
 
-# Ejecutar el contenedor
-docker run -d \
-    --name prueba-devops-container \
-    -p 5000:5000 \
-    -v "$(pwd)/logs:/logs" \
-    prueba-devops-app
-
-echo "Contenedor iniciado. La aplicación está disponible en:"
-echo "http://localhost:5000 - Mensaje de bienvenida"
-echo "http://localhost:5000/devops - Mensaje de DevOps"
+ 
